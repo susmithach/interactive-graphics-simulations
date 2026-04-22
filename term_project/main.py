@@ -53,7 +53,29 @@ class Test(Base):
         self.wall.setPosition(0, -0.25, -3)
         self.scene.add(self.wall)
 
+        self.player_speed = 0.05
+
     def update(self):
+        dx = 0
+        dz = 0
+
+        if self.input.isKeyPressed("w"):
+            dz -= self.player_speed
+        if self.input.isKeyPressed("s"):
+            dz += self.player_speed
+        if self.input.isKeyPressed("a"):
+            dx -= self.player_speed
+        if self.input.isKeyPressed("d"):
+            dx += self.player_speed
+
+        current_position = self.player.getPosition()
+
+        self.player.setPosition(
+            current_position[0] + dx,
+            current_position[1],
+            current_position[2] + dz
+        )
+    
         self.player.rotateY(1/120)
         self.player.rotateX(1/180)
         self.render.render(self.scene, self.camera)
