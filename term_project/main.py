@@ -3,10 +3,11 @@ from core.render import Render
 from core.scene import Scene
 from core.camera import Camera
 from core.mesh import Mesh
+from pathlib import Path
+from core.texture import Texture
+from material.textureMaterial import TextureMaterial
+from geometry.sphereGeometry import SphereGeometry
 
-from geometry.boxGeometry import BoxGeometry
-
-from material.surfaceBasicMaterial import SurfaceBasicMaterial
 
 
 class Test(Base):
@@ -19,15 +20,19 @@ class Test(Base):
 
         self.camera.setPosition(0, 0, 5)
 
-        geometry = BoxGeometry()
-        material = SurfaceBasicMaterial({"useVertexColors": 1})
+        base_dir = Path(__file__).resolve().parent
+        texture_path = base_dir / "img" / "earth_8k.jpg"
 
-        self.cube = Mesh(geometry, material)
-        self.scene.add(self.cube)
+        geometry = SphereGeometry(radius=1)
+        texture = Texture(str(texture_path))
+        material = TextureMaterial(texture)
+
+        self.player = Mesh(geometry, material)
+        self.scene.add(self.player)
 
     def update(self):
-        self.cube.rotateY(1/120)
-        self.cube.rotateX(1/180)
+        self.player.rotateY(1/120)
+        self.player.rotateX(1/180)
         self.render.render(self.scene, self.camera)
 
 
