@@ -13,9 +13,16 @@ from math import pi
 
 from material.surfaceBasicMaterial import SurfaceBasicMaterial
 
+def is_colliding(pos_a, size_a, pos_b, size_b):
+      return (
+          abs(pos_a[0] - pos_b[0]) < (size_a[0] + size_b[0]) / 2 and
+          abs(pos_a[1] - pos_b[1]) < (size_a[1] + size_b[1]) / 2 and
+          abs(pos_a[2] - pos_b[2]) < (size_a[2] + size_b[2]) / 2
+      )
 
 
 class Test(Base):
+
     def initialize(self):
         print("Initializing term project scene...")
 
@@ -54,6 +61,9 @@ class Test(Base):
         self.scene.add(self.wall)
 
         self.player_speed = 0.05
+        self.player_size = [1.2, 1.2, 1.2]
+        self.wall_size = [3, 1.5, 0.4]
+        
 
     def update(self):
         dx = 0
@@ -69,12 +79,23 @@ class Test(Base):
             dx += self.player_speed
 
         current_position = self.player.getPosition()
-
-        self.player.setPosition(
+        proposed_position = [
             current_position[0] + dx,
             current_position[1],
             current_position[2] + dz
-        )
+        ]
+
+        if not is_colliding(
+            proposed_position,
+            self.player_size,
+            self.wall.getPosition(),
+            self.wall_size
+        ):
+            self.player.setPosition(
+                proposed_position[0],
+                proposed_position[1],
+                proposed_position[2]
+            )
     
         self.player.rotateY(1/120)
         self.player.rotateX(1/180)
