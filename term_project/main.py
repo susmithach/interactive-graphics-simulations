@@ -7,6 +7,10 @@ from pathlib import Path
 from core.texture import Texture
 from material.textureMaterial import TextureMaterial
 from geometry.sphereGeometry import SphereGeometry
+from geometry.rectangleGeometry import RectangleGeometry
+from math import pi
+
+from material.surfaceBasicMaterial import SurfaceBasicMaterial
 
 
 
@@ -18,17 +22,27 @@ class Test(Base):
         self.scene = Scene()
         self.camera = Camera()
 
-        self.camera.setPosition(0, 0, 5)
+        self.camera.setPosition(0, 2.5, 7)
+        self.camera.rotateX(-0.35)
 
         base_dir = Path(__file__).resolve().parent
-        texture_path = base_dir / "img" / "earth_8k.jpg"
 
-        geometry = SphereGeometry(radius=1)
-        texture = Texture(str(texture_path))
-        material = TextureMaterial(texture)
+        player_texture_path = base_dir/"img"/"earth_8k.jpg"
 
-        self.player = Mesh(geometry, material)
+        player_geometry = SphereGeometry(radius=1)
+        player_texture = Texture(str(player_texture_path))
+        player_material = TextureMaterial(player_texture)
+
+        self.player = Mesh(player_geometry, player_material)
         self.scene.add(self.player)
+
+        floor_geometry = RectangleGeometry(width=10, height=10)
+        floor_material = SurfaceBasicMaterial({"baseColor": [0.45, 0.45, 0.45]})
+
+        self.floor = Mesh(floor_geometry, floor_material)
+        self.floor.rotateX(-pi / 2)
+        self.floor.setPosition(0, -1, 0)
+        self.scene.add(self.floor)
 
     def update(self):
         self.player.rotateY(1/120)
