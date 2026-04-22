@@ -8,6 +8,7 @@ from core.texture import Texture
 from material.textureMaterial import TextureMaterial
 from geometry.sphereGeometry import SphereGeometry
 from geometry.rectangleGeometry import RectangleGeometry
+from geometry.boxGeometry import BoxGeometry
 from math import pi
 
 from material.surfaceBasicMaterial import SurfaceBasicMaterial
@@ -29,11 +30,12 @@ class Test(Base):
 
         player_texture_path = base_dir/"img"/"earth_8k.jpg"
 
-        player_geometry = SphereGeometry(radius=1)
+        player_geometry = SphereGeometry(radius=0.6)
         player_texture = Texture(str(player_texture_path))
         player_material = TextureMaterial(player_texture)
 
         self.player = Mesh(player_geometry, player_material)
+        self.player.setPosition(0, -0.4, 2)
         self.scene.add(self.player)
 
         floor_geometry = RectangleGeometry(width=10, height=10)
@@ -43,6 +45,13 @@ class Test(Base):
         self.floor.rotateX(-pi / 2)
         self.floor.setPosition(0, -1, 0)
         self.scene.add(self.floor)
+
+        wall_geometry = BoxGeometry(width=3, height=1.5, depth=0.4)
+        wall_material = SurfaceBasicMaterial({"baseColor": [0.8, 0.15, 0.12]})
+
+        self.wall = Mesh(wall_geometry, wall_material)
+        self.wall.setPosition(0, -0.25, -3)
+        self.scene.add(self.wall)
 
     def update(self):
         self.player.rotateY(1/120)
