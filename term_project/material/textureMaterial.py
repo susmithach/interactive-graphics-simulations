@@ -53,7 +53,7 @@ class TextureMaterial(Material):
 
 		# add uniforms
 		self.addUniform("vec3", "baseColor", [1.0, 1.0, 1.0])
-		self.addUniform("sampler2D", "texture", [texture.textureRef, 1])
+		self.addUniform("sampler2D", "textureSampler2D", [texture.textureRef, 1])
 		self.locateUniforms()
 
 		# draw style
