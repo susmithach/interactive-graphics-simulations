@@ -9,7 +9,7 @@ The scene contains:
 - a floor
 - a wall obstacle
 
-The player can be moved with the keyboard. The globe stays inside the floor area and cannot pass through the wall.
+The player can be moved with the keyboard and can also jump. The globe stays inside the floor area and cannot pass through the wall body.
 
 ## Features
 
@@ -17,9 +17,11 @@ The player can be moved with the keyboard. The globe stays inside the floor area
 - Scene graph structure using `Scene`, `Mesh`, and `Object3D`
 - Image-based texture on the globe
 - Keyboard movement with `W`, `A`, `S`, and `D`
+- Jump with the `Space` key
 - Movement handled in the `update()` stage
 - Model matrix updates through object position changes
 - AABB collision detection with the wall
+- Wall-top landing during jumps
 - Floor boundary limits to keep the player inside the visible area
 
 ## Controls
@@ -29,6 +31,7 @@ W - move forward
 S - move backward
 A - move left
 D - move right
+Space - jump
 ```
 
 ## How to Run
@@ -58,6 +61,7 @@ term_project/
 - **Player:** textured sphere using `earth_8k.jpg`
 - **Floor:** flat rectangular ground surface
 - **Wall:** 3D obstacle that blocks player movement
+- **Wall Top:** support surface where the player can land after a jump
 
 ## Implementation Notes
 
@@ -71,7 +75,7 @@ The globe uses an image texture through:
 ### Movement
 
 Keyboard input is checked every frame in `update()`.
-The player position is updated using `setPosition(...)`, which changes the object's model matrix.
+The player position is updated using `setPosition(...)`, which changes the object's model matrix. Horizontal movement uses `W`, `A`, `S`, and `D`, and `Space` starts a jump when the player is standing on the floor or on top of the wall.
 
 ### Collision
 
@@ -80,10 +84,11 @@ The project uses Axis-Aligned Bounding Box (AABB) collision detection.
 Before moving the player, the program:
 1. calculates the proposed next position
 2. checks collision with the wall
-3. checks that the player stays inside the floor boundary
-4. applies movement only if both checks pass
+3. checks whether the player should land on top of the wall
+4. checks that the player stays inside the floor boundary
+5. applies movement only when the result is valid
 
-This prevents the globe from crossing the wall or leaving the floor area.
+This prevents the globe from crossing the wall body or leaving the floor area. During a jump, the player can land on top of the wall or move across it, but it should not remain inside the wall.
 
 ## Manual Test Checklist
 
@@ -92,10 +97,12 @@ This prevents the globe from crossing the wall or leaving the floor area.
 3. Press `W`, `A`, `S`, and `D`
 4. Confirm the globe moves correctly
 5. Move directly into the wall and confirm it stops
-6. Move around the side of the wall and confirm movement is allowed
-7. Move toward the floor edges and confirm the globe stays inside the floor
-8. Close the window and confirm the program exits cleanly
+6. Press `Space` and confirm the globe jumps and lands back on the floor
+7. Use `Space` with `W` or `S` near the wall and confirm the globe lands on top of the wall or clears it
+8. Move around the side of the wall and confirm movement is allowed
+9. Move toward the floor edges and confirm the globe stays inside the floor
+10. Close the window and confirm the program exits cleanly
 
 ## Summary
 
-This project demonstrates texture mapping, scene graph rendering, keyboard-controlled movement, model matrix updates, and collision handling in a simple interactive 3D environment.
+This project demonstrates texture mapping, scene graph rendering, keyboard-controlled movement, jumping, model matrix updates, and collision handling in a simple interactive 3D environment.
