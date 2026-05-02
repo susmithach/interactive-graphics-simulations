@@ -17,19 +17,19 @@ from material.surfaceBasicMaterial import SurfaceBasicMaterial
 # Checks whether two axis-aligned bounding boxes are overlapping.
 # Each object is represented by its center position and its width, height, and depth.
 def is_colliding(pos_a, size_a, pos_b, size_b):
-      return (
-          abs(pos_a[0] - pos_b[0]) < (size_a[0] + size_b[0]) / 2 and
-          abs(pos_a[1] - pos_b[1]) < (size_a[1] + size_b[1]) / 2 and
-          abs(pos_a[2] - pos_b[2]) < (size_a[2] + size_b[2]) / 2
-      )
+    return (
+        abs(pos_a[0] - pos_b[0]) < (size_a[0] + size_b[0]) / 2 and
+        abs(pos_a[1] - pos_b[1]) < (size_a[1] + size_b[1]) / 2 and
+        abs(pos_a[2] - pos_b[2]) < (size_a[2] + size_b[2]) / 2
+    )
 
 # Checks whether the player is still inside the visible floor area.
 # This prevents the sphere from moving off the floor into the empty background.
 def is_inside_floor(pos, x_limit, z_limit):
-      return (
-          -x_limit <= pos[0] <= x_limit and
-          -z_limit <= pos[2] <= z_limit
-      )
+    return (
+        -x_limit <= pos[0] <= x_limit and
+        -z_limit <= pos[2] <= z_limit
+    )
 
 class Test(Base):
 
@@ -43,9 +43,9 @@ class Test(Base):
         self.camera = Camera()
         # Position the camera above and behind the scene so the floor,
         # player, and obstacle are visible.
-        self.camera.setPosition(1.8, 2.4, 7)
-        self.camera.rotateY(0.18)
-        self.camera.rotateX(-0.35)
+        self.camera.setPosition(1.5, 2.2, 6.2)
+        self.camera.rotateY(0.16)
+        self.camera.rotateX(-0.32)
 
         # Use the folder containing this file as the base path for loading images.
         # This makes the texture path work when the project is run
@@ -79,14 +79,14 @@ class Test(Base):
 
         # Create a red wall obstacle.
         # The wall is a 3D box and will be used for collision detection.
-        wall_geometry = BoxGeometry(width=3, height=1.5, depth=0.7)
-        wall_material = SurfaceBasicMaterial({"baseColor": [0.8, 0.15, 0.12]})
+        wall_geometry = BoxGeometry(width=3.5, height=1.8, depth=0.8)
+        wall_material = SurfaceBasicMaterial({"baseColor": [0.65, 0.2, 0.18]})
 
         self.wall = Mesh(wall_geometry, wall_material)
 
         # The wall bottom sits on the floor.
-         # Floor Y is -1 and wall height is 1.5, so center Y is -1 + 0.75 = -0.25.
-        self.wall.setPosition(0, -0.25, -3)
+        # Floor Y is -1 and wall height is 1.5, so center Y is -1 + 0.75 = -0.25.
+        self.wall.setPosition(0, -0.1, -3)
         self.scene.add(self.wall)
 
         # Movement speed is measured in scene units per frame.
@@ -94,7 +94,7 @@ class Test(Base):
         # Collision sizes for AABB collision.
         # The sphere is approximated by a box around it.
         self.player_size = [1.2, 1.2, 1.2]
-        self.wall_size = [3, 1.5, 0.7]
+        self.wall_size = [3.5, 1.8, 0.8]
         # Floor limits keep the player inside the visible floor area.
         # The floor is 10 by 12, and the sphere radius is 0.6.
         self.floor_x_limit = 4.4
@@ -150,10 +150,11 @@ class Test(Base):
                 proposed_position[1],
                 proposed_position[2]
             )
-        # Rotate the globe slightly each frame so the texture is visible in motion.
-        self.player.rotateY(1/120)
-        self.player.rotateX(1/180)
-         # Render the updated scene.
+        # Rotate the globe slightly when it is in motion.
+        if dx != 0 or dz != 0:
+            self.player.rotateY(1/120)
+            self.player.rotateX(1/180)
+        # Render the updated scene.
         self.render.render(self.scene, self.camera)
 
 
